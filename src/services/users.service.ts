@@ -14,7 +14,7 @@ class UserService {
     if (!user || user.password !== login.password) {
       return ({ type: 400, message: 'usuário não encontrado' });
     }
-    const token = await createToken(user);
+    const token = await createToken.createToken(user);
     return token;
   }
 }
