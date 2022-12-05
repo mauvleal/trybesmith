@@ -1,6 +1,7 @@
 import { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import Users from '../interfaces/user.interface';
 import connection from './connection';
+import { Login } from '../interfaces/login.interface';
 
 export default class UserModel {
   private connection: Pool;
@@ -25,6 +26,17 @@ export default class UserModel {
       .execute<Users[] & RowDataPacket[]>(
       'SELECT * FROM Trybesmith.Users WHERE username = ?',
       [username],
+    );
+    return rows;
+  }
+
+  async getUserLoginData(users: Login): Promise<Login> {
+    const { username, password } = users;
+    const [[rows]] = await this
+      .connection
+      .execute<Login[] & RowDataPacket[]>(
+      'SELECT * FROM Trybesmith.Users WHERE username =? AND password =?',
+      [username, password],
     );
     return rows;
   }

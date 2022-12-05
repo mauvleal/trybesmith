@@ -5,7 +5,6 @@ class OrderController {
   constructor(private orderService = new OrderService()) { }
 
   public getOrderContr = async (req: Request, res: Response) => {
-    console.log('olha eu no controller');
     const orders = await this.orderService.getOrdersServ();
     res.status(200).json(orders);
   };

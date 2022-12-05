@@ -10,7 +10,6 @@ export default class OrderModel {
   }
 
   async getOrder(): Promise<Order[]> {
-    console.log('olha eu no model, se eu aparecer aqui... teu problema é SQL, demente!');
     const [rows] = await this
       .connection
       .execute<Order[] & RowDataPacket[]>(

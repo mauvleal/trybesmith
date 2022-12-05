@@ -10,7 +10,6 @@ class UserService {
   }
 
   async createUser(login: Users) {
-    console.log('oi, service');
     const user = await this.userModel.newUser(login);
     if (!user || user.password !== login.password) {
       return ({ type: 400, message: 'usuário não encontrado' });
