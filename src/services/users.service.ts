@@ -1,23 +1,27 @@
 import Users from '../interfaces/user.interface';
-// import connection from '../models/connection';
+import connection from '../models/connection';
 import UserModel from '../models/user.model';
-import createToken from '../middlewares/auth.middleware';
+import { verifyUser } from './validations/validations.inputs';
+// import createToken from '../middlewares/auth.middleware';
 
-class UserService {
-  public userModel: UserModel;
+class UsersService {
+  public model: UserModel;
 
   constructor() {
-    this.userModel = new UserModel();
+    this.model = new UserModel(connection);
   }
 
-  async createUser(login: Users) {
-    const user = await this.userModel.newUser(login);
-    if (!user || user.password !== login.password) {
-      return ({ type: 400, message: 'usuário não encontrado' });
+  public async createUser(users: Users) {
+    const error = await verifyUser(users);
+
+    if (error.type) {
+      return error;
     }
-    const token = await createToken.createToken(user);
-    return token;
+
+    const usersService = await this.model.postModelUsers(users);
+
+    return { type: null, message: usersService };
   }
 }
 
-export default UserService;
+export default UsersService;

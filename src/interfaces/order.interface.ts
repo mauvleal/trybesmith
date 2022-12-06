@@ -1,5 +1,7 @@
 interface Order {
-  id?: number;
+  id?: number
+  userId: number
+  productsIds: number[];
 }
   
 export default Order;
