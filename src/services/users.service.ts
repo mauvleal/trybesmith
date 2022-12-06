@@ -1,4 +1,5 @@
 import Users from '../interfaces/user.interface';
+// import connection from '../models/connection';
 import UserModel from '../models/user.model';
 import createToken from '../middlewares/auth.middleware';
 

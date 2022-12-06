@@ -1,13 +1,23 @@
 import { Request, Response } from 'express';
-import OrderService from '../services/order.service';
+import LoginService from '../services/login.service';
 
-class OrderController {
-  constructor(private orderService = new OrderService()) { }
+class LoginController {
+  constructor(private loginService = new LoginService()) { }
 
-  public getOrderContr = async (req: Request, res: Response) => {
-    const orders = await this.orderService.getOrdersServ();
-    res.status(200).json(orders);
+  public controllerLogin = async (req: Request, res: Response): Promise<Response> => {
+    const login = req.body;
+    const { type, message } = await this.loginService.serviceLogin(login);
+
+    if (type === 'BAD_REQUEST') {
+      return res.status(400).json({ message });
+    }
+
+    if (type === 'UNAUTHORIZED') {
+      return res.status(401).json({ message });
+    }
+
+    return res.status(200).json({ token: message });
   };
 }
 
-export default OrderController;
+export default LoginController;

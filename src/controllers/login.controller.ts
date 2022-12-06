@@ -1,14 +1,23 @@
 import { Request, Response } from 'express';
 import LoginService from '../services/login.service';
 
-export default class LoginController {
+class LoginController {
   constructor(private loginService = new LoginService()) { }
 
-  public login = async (req: Request, res: Response) => {
-    const { type, message } = await this.loginService.validateLoginBody(req.body);
-    if (type) {
-      return res.status(type).json({ message });
+  public controllerLogin = async (req: Request, res: Response): Promise<Response> => {
+    const login = req.body;
+    const { type, message } = await this.loginService.serviceLogin(login);
+
+    if (type === 'BAD_REQUEST') {
+      return res.status(400).json({ message });
     }
-    res.status(200).json({ token: message });
+
+    if (type === 'UNAUTHORIZED') {
+      return res.status(401).json({ message });
+    }
+
+    return res.status(200).json({ token: message });
   };
 }
+
+export default LoginController;

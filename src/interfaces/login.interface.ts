@@ -1,7 +1,6 @@
-export interface Login {
+interface Login {
   username: string;
   password: string;
 }
 
-// classe: string;
-// level: number;
+export default Login;

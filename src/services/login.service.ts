@@ -1,23 +1,33 @@
-import jwt from 'jsonwebtoken';
-import { Login } from '../interfaces/login.interface';
-import UserModel from '../models/user.model';
+import Login from '../interfaces/login.interface';
+import connection from '../models/connection';
+import LoginModel from '../models/login.model';
+import createToken from '../utils/jwt.util';
+import verifyLogin from './validations/validations.inputs';
 
-export default class LoginService {
-  public userModel: UserModel;
+class LoginService {
+  public model: LoginModel;
 
   constructor() {
-    this.userModel = new UserModel();
+    this.model = new LoginModel(connection);
   }
 
-  validateLoginBody = async (params: Login) => {
-    const userData = await this.userModel.getUserLoginData(params);
-    if (!userData) {
-      return ({ type: 401, message: 'Username or password invalid' });
+  public async serviceLogin(login: Login) {
+    const error = await verifyLogin(login);
+
+    if (error.type) {
+      return error;
     }
-    const tokenCreated = jwt.sign(params, process.env.JWT_SECRET as string, {
-      expiresIn: '15d',
-      algorithm: 'HS256',
-    });
-    return ({ type: null, message: tokenCreated });
-  };
+
+    const newLogin = await this.model.modelLogin(login);
+
+    if (!newLogin.length) {
+      return { type: 'UNAUTHORIZED', message: 'Username or password invalid' };
+    }
+
+    const token = createToken(newLogin);
+
+    return { type: null, message: token };
+  }
 }
+
+export default LoginService;
