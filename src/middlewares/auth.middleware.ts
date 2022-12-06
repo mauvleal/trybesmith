@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import Joi from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import Users from '../interfaces/user.interface';
+import { verifyToken } from '../utils/jwt.util';
 
 const createToken = async (login: Users) => {
   const token = jwt
@@ -10,12 +10,20 @@ const createToken = async (login: Users) => {
 };
 
 const validation = async (req: Request, res: Response, next: NextFunction) => {
-  const schema = Joi.object({
-    username: Joi.string().required(),
-    password: Joi.string().required(),
-  });
-  const { error } = schema.validate(req.body);
-  if (error) return res.status(400).json(error.details[0].message);
+  const { authorization: token } = req.headers;
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token not found' });
+  }
+
+  const tokenValid = verifyToken(token);
+
+  if (tokenValid.type) {
+    return res.status(401).json({ message: tokenValid.message });
+  }
+
+  req.body.user = tokenValid.data;
+
   next();
 };
   
