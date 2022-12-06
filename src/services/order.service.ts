@@ -1,5 +1,5 @@
 import Orders from '../interfaces/order.interface';
-// import connection from '../models/connection';
+import connection from '../models/connection';
 import OrderModel from '../models/order.model';
 import { verifyProductsIds } from './validations/validations.inputs';
 
@@ -7,7 +7,7 @@ class OrdersService {
   public model: OrderModel;
 
   constructor() {
-    this.model = new OrderModel();
+    this.model = new OrderModel(connection);
   }
 
   public async serviceOrdersGetAll(): Promise<Orders[]> {

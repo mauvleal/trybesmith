@@ -1,11 +1,11 @@
 import { Pool, RowDataPacket, ResultSetHeader } from 'mysql2/promise';
-import connection from './connection';
+// import connection from './connection';
 import Order from '../interfaces/order.interface';
 
 export default class OrderModel {
-  private connection: Pool;
+  public connection: Pool;
 
-  constructor() {
+  constructor(connection: Pool) {
     this.connection = connection;
   }
 
@@ -19,7 +19,7 @@ export default class OrderModel {
       ON Orders.id = Products.orderId
       GROUP BY Orders.id`,
     );
-    return rows;
+    return rows as Order[];
   }
 
   public async modelOrdersPost(orders: Order): Promise<number> {
