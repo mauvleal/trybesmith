@@ -1,11 +1,11 @@
 import { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import connection from './connection';
+// import connection from './connection';
 import Product from '../interfaces/product.interface';
 
-export default class ProductModel {
-  private connection: Pool;
+class ProductModel {
+  public connection: Pool;
 
-  constructor() {
+  constructor(connection: Pool) {
     this.connection = connection;
   }
 
@@ -17,10 +17,14 @@ export default class ProductModel {
 
   async addProduct(product: Product): Promise<Product> {
     const { name, amount } = product;
-    const [{ insertId }] = await this.connection.execute<ResultSetHeader>(
+    const result = await this.connection.execute<ResultSetHeader>(
       'INSERT INTO Trybesmith.Products (name, amount) VALUES (?, ?)',
       [name, amount],
     );
+    const [dataInserted] = result;
+    const { insertId } = dataInserted;
     return { id: insertId, ...product };
   }
 }
+
+export default ProductModel;

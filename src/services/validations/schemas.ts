@@ -27,6 +27,8 @@ const userSchema = Joi.object({
 export {
   userNameSchema,
   passwordSchema,
+  nameSchema,
+  amountSchema,
   productSchema,
   userSchema,
   productsIdsSchema,
