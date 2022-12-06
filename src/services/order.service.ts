@@ -1,13 +1,13 @@
 import Orders from '../interfaces/order.interface';
 // import connection from '../models/connection';
-import OrdersModel from '../models/order.model';
+import OrderModel from '../models/order.model';
 import { verifyProductsIds } from './validations/validations.inputs';
 
 class OrdersService {
-  public model: OrdersModel;
+  public model: OrderModel;
 
   constructor() {
-    this.model = new OrdersModel();
+    this.model = new OrderModel();
   }
 
   public async serviceOrdersGetAll(): Promise<Orders[]> {
